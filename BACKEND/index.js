@@ -1,105 +1,104 @@
+require('dotenv').config()
+
 const express = require('express')
-const cors = require('cors')   // ✅ import here
+const cors = require('cors')
+const mongoose = require('mongoose')
+const Note = require('./models/note')
+
 const app = express()
 
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: false
-})) 
+const url = process.env.MONGODB_URI
 
+mongoose.set('strictQuery', false)
+
+mongoose.connect(url)
+  .then(() => {
+    console.log('connected to MongoDB')
+  })
+  .catch(error => {
+    console.log('error connecting to MongoDB:', error.message)
+  })
+
+app.use(cors())
 app.use(express.static('dist'))
-
 app.use(express.json())
 
-let notes = [
-  {
-    id: 1,
-    content: "HTML is easy",
-    important: true
-  },
-  {
-    id: 2,
-    content: "Browser can execute only JavaScript",
-    important: false
-  },
-  {
-    id: 3,
-    content: "GET and POST are the most important methods of HTTP protocol",
-    important: true
-  }
-]
-
-
+// 🔹 GET todas las notas
 app.get('/api/notes', (request, response) => {
-  response.json(notes)
+  Note.find({})
+    .then(notes => {
+      response.json(notes)
+    })
 })
 
-app.get('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const note = notes.find(note => note.id === id)
-  
-  if (note) {
-    response.json(note)
-  } else {
-    response.status(404).end()
-  }
+// 🔹 GET por id
+app.get('/api/notes/:id', (request, response, next) => {
+  Note.findById(request.params.id)
+    .then(note => {
+      if (note) {
+        response.json(note)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
-app.put('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
+// 🔹 POST (con validación Mongoose)
+app.post('/api/notes', (request, response, next) => {
   const body = request.body
 
-  const note = notes.find(n => n.id === id)
-
-  if (!note) {
-    return response.status(404).json({ error: 'note not found' })
-  }
-
-  const updatedNote = {
-    ...note,
+  const note = new Note({
     content: body.content,
-    important: body.important
+    important: body.important || false
+  })
+
+  note.save()
+    .then(savedNote => {
+      response.json(savedNote)
+    })
+    .catch(error => next(error))
+})
+
+// 🔹 PUT (con validaciones activadas)
+app.put('/api/notes/:id', (request, response, next) => {
+  const { content, important } = request.body
+
+  Note.findByIdAndUpdate(
+    request.params.id,
+    { content, important },
+    { new: true, runValidators: true, context: 'query' }
+  )
+    .then(updatedNote => {
+      response.json(updatedNote)
+    })
+    .catch(error => next(error))
+})
+
+// 🔹 DELETE
+app.delete('/api/notes/:id', (request, response, next) => {
+  Note.findByIdAndDelete(request.params.id)
+    .then(() => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
+})
+
+// 🔥 middleware de errores
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).json({ error: 'malformatted id' })
+  } 
+  else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
 
-  notes = notes.map(n => n.id === id ? updatedNote : n)
-
-  response.json(updatedNote)
-})
-
-app.delete('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
-  notes = notes.filter(note => note.id !== id)
-
-  response.status(204).end()
-})
-
-const generateId = () => {
-  const maxId = notes.length > 0
-    ? Math.max(...notes.map(n => n.id))
-    : 0
-  return maxId + 1
+  next(error)
 }
 
-app.post('/api/notes', (request, response) => {
-  const body = request.body
-
-  if (!body.content) {
-    return response.status(400).json({ 
-      error: 'content missing' 
-    })
-  }
-
-  const note = {
-    content: body.content,
-    important: Boolean(body.important) || false,
-    id: generateId(),
-  }
-
-  notes = notes.concat(note)
-
-  response.json(note)
-})
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
