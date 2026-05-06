@@ -6,6 +6,10 @@ const error = (...params) => {
   console.error(...params)
 }
 
-module.exports = {
-  info, error
+// ✅ Exportar con nombre para mejor referencia en VS Code
+const logger = {
+  info,
+  error
 }
+
+module.exports = logger

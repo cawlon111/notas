@@ -24,8 +24,11 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
-module.exports = {
+// ✅ Exportar con nombre
+const middleware = {
   requestLogger,
   unknownEndpoint,
   errorHandler
 }
+
+module.exports = middleware
