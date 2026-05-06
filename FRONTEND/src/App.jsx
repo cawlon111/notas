@@ -2,18 +2,12 @@ import { useState, useEffect } from 'react'
 import Note from './components/Note'
 import noteService from './services/notes'
 import Notification from './components/Notification'
-import './App.css'
+// No importes App.css
 
 const Footer = () => {
-  const footerStyle = {
-    color: 'green',
-    fontStyle: 'italic',
-    fontSize: 16
-  }
   return (
-    <div style={footerStyle}>
-      <br />
-      <em>Note app, Department of Computer Science, University of Helsinki 2024</em>
+    <div className="footer">
+      <em>Aplicación de Notas, Departamento de Ciencias de la Computación, Universidad de Helsinki 2024</em>
     </div>
   )
 }
@@ -23,6 +17,7 @@ const App = () => {
   const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
 
   useEffect(() => {
     noteService
@@ -34,37 +29,50 @@ const App = () => {
 
   const toggleImportanceOf = (id) => {
     const note = notes.find(n => n.id === id)
-
     if (!note) return
 
-    const changedNote = {
-      ...note,
-      important: !note.important
-    }
+    const changedNote = { ...note, important: !note.important }
 
     noteService
       .update(id, changedNote)
       .then(returnedNote => {
-        setNotes(
-          notes.map(note =>
-            note.id !== id ? note : returnedNote
-          )
-        )
+        setNotes(notes.map(note => note.id !== id ? note : returnedNote))
       })
       .catch(() => {
-         setErrorMessage(
-          `Note '${note.content}' was already removed from server`
-        )
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
+        setErrorMessage(`La nota '${note.content}' ya fue eliminada del servidor`)
+        setTimeout(() => setErrorMessage(null), 5000)
+        setNotes(notes.filter(n => n.id !== id))
+      })
+  }
 
+  const deleteNote = (id) => {
+    const note = notes.find(n => n.id === id)
+    if (!note) return
+
+    const confirmDelete = window.confirm(`¿Eliminar la nota "${note.content}"?`)
+    if (!confirmDelete) return
+
+    noteService
+      .deleteNote(id)
+      .then(() => {
+        setNotes(notes.filter(n => n.id !== id))
+        setSuccessMessage(`Nota "${note.content}" eliminada correctamente`)
+        setTimeout(() => setSuccessMessage(null), 3000)
+      })
+      .catch(() => {
+        setErrorMessage(`Error al eliminar la nota "${note.content}"`)
+        setTimeout(() => setErrorMessage(null), 5000)
         setNotes(notes.filter(n => n.id !== id))
       })
   }
 
   const addNote = (event) => {
     event.preventDefault()
+    if (!newNote.trim()) {
+      setErrorMessage('La nota no puede estar vacía')
+      setTimeout(() => setErrorMessage(null), 3000)
+      return
+    }
 
     const noteObject = {
       content: newNote,
@@ -76,6 +84,12 @@ const App = () => {
       .then(returnedNote => {
         setNotes(notes.concat(returnedNote))
         setNewNote('')
+        setSuccessMessage(`Nota "${newNote}" agregada correctamente`)
+        setTimeout(() => setSuccessMessage(null), 3000)
+      })
+      .catch(() => {
+        setErrorMessage(`Error al agregar la nota "${newNote}"`)
+        setTimeout(() => setErrorMessage(null), 5000)
       })
   }
 
@@ -83,42 +97,48 @@ const App = () => {
     setNewNote(event.target.value)
   }
 
-  const notesToShow = showAll
-    ? notes
-    : notes.filter(note => note.important)
+  const notesToShow = showAll ? notes : notes.filter(note => note.important)
 
   return (
-    <div>
-      <h1>Notes</h1>
-      {errorMessage?<Notification message={errorMessage} />:''}
-      <Footer />
-
-      <div>
-        <button onClick={() => setShowAll(!showAll)}>
-          show {showAll ? 'important' : 'all'}
-        </button>
+    <div className="app-container">
+      <div className="header">
+        <h1>📝 Notas</h1>
+        <p>Organiza tus ideas de manera fácil y rápida</p>
       </div>
+      
+      <div className="content">
+        {errorMessage && <Notification message={errorMessage} type="error" />}
+        {successMessage && <Notification message={successMessage} type="success" />}
 
-      <ul>
-        {notesToShow.map(note => (
-          <Note
-            key={note.id}
-            note={note}
-            toggleImportance={() =>
-              toggleImportanceOf(note.id)
-            }
-          />
-        ))}
-      </ul>
+        <button className="toggle-button" onClick={() => setShowAll(!showAll)}>
+          {showAll ? '⭐ Mostrar solo importantes' : '📋 Mostrar todas'}
+        </button>
 
-      <form onSubmit={addNote}>
-        <input
-          value={newNote}
-          onChange={handleNoteChange}
-          placeholder={'a new note...'}
-        />
-        <button type="submit">save</button>
-      </form>
+        <ul>
+          {notesToShow.map(note => (
+            <Note
+              key={note.id}
+              note={note}
+              toggleImportance={() => toggleImportanceOf(note.id)}
+              onDelete={() => deleteNote(note.id)}
+            />
+          ))}
+        </ul>
+
+        <form className="note-form" onSubmit={addNote}>
+          <h3>✏️ Agregar nueva nota</h3>
+          <div className="form-group">
+            <input
+              value={newNote}
+              onChange={handleNoteChange}
+              placeholder="Escribe tu nota aquí..."
+            />
+            <button type="submit">Guardar</button>
+          </div>
+        </form>
+      </div>
+      
+      <Footer />
     </div>
   )
 }

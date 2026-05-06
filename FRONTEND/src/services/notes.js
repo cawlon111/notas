@@ -11,7 +11,7 @@ const getAll = () => {
       return [
         {
           id: 10000,
-          content: 'This note is not saved to server',
+          content: 'Esta nota no está guardada en el servidor',
           important: true,
         },
       ]
@@ -29,8 +29,15 @@ const update = async (id, newObject) => {
   return request.then((response) => response.data)
 }
 
+// ✅ NUEVA función para eliminar una nota
+const deleteNote = async (id) => {
+  const request = axios.delete(`${baseUrl}/${id}`)
+  return request.then((response) => response.data)
+}
+
 export default {
   getAll,
   create,
   update,
+  deleteNote,  // ← Añadir esta línea
 }

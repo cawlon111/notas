@@ -1,20 +1,334 @@
+/* Variables globales */
+:root {
+  --primary: #4a90e2;
+  --primary-dark: #357abd;
+  --danger: #ff4444;
+  --danger-dark: #cc0000;
+  --success: #00c851;
+  --success-dark: #007e33;
+  --text: #333333;
+  --text-light: #666666;
+  --background: #f5f5f5;
+  --card-bg: #ffffff;
+  --border: #e0e0e0;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Contenedor principal */
+.app-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: var(--shadow-hover);
+  overflow: hidden;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 30px;
+  text-align: center;
+}
+
+.header h1 {
+  color: white;
+  font-size: 2.5rem;
+  margin: 0;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.header p {
+  margin-top: 10px;
+  opacity: 0.9;
+  font-size: 1rem;
+}
+
+/* Contenido principal */
+.content {
+  padding: 30px;
+}
+
+/* Título principal (si se usa fuera del header) */
 h1 {
-  color: green;
-  font-style: italic;
+  color: var(--primary);
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: 600;
 }
 
+/* Botón de mostrar todas/importantes */
+.toggle-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.toggle-button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+/* Lista de notas */
+ul {
+  list-style: none;
+  margin-bottom: 30px;
+}
+
+/* Cada nota individual */
 .note {
-  color: grey;
-  padding-top: 5px;
-  font-size: 15px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 15px 20px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+  animation: slideIn 0.3s ease;
 }
 
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.note:hover {
+  transform: translateX(5px);
+  box-shadow: var(--shadow);
+  border-color: var(--primary);
+}
+
+/* Contenido de la nota */
+.note-content {
+  flex: 1;
+  font-size: 1rem;
+  color: var(--text);
+  word-break: break-word;
+}
+
+/* Nota importante */
+.note-important .note-content {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+/* Contenedor de botones de la nota */
+.note-buttons {
+  display: flex;
+  gap: 8px;
+  margin-left: 15px;
+}
+
+/* Botones de acción */
+button {
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.note-buttons button {
+  background: #f0f0f0;
+  color: var(--text);
+}
+
+.note-buttons button:hover {
+  transform: scale(1.05);
+}
+
+/* Botón de importancia */
+.importance-button {
+  background: var(--primary) !important;
+  color: white !important;
+}
+
+.importance-button:hover {
+  background: var(--primary-dark) !important;
+}
+
+/* Botón de eliminar */
+.delete-button {
+  background: var(--danger) !important;
+  color: white !important;
+}
+
+.delete-button:hover {
+  background: var(--danger-dark) !important;
+}
+
+/* Formulario */
+.note-form {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid var(--border);
+}
+
+.note-form h3 {
+  margin-bottom: 15px;
+  color: var(--text);
+  font-size: 1.2rem;
+}
+
+.form-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.form-group input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.form-group button {
+  background: var(--success);
+  color: white;
+  padding: 12px 24px;
+  font-weight: 600;
+}
+
+.form-group button:hover {
+  background: var(--success-dark);
+  transform: translateY(-2px);
+}
+
+/* Notificaciones */
 .error {
-  color: red;
-  background: lightgrey;
-  font-size: 20px;
-  border-style: solid;
-  border-radius: 5px;
-  padding: 10px;
-  margin-bottom: 10px;
+  color: var(--danger);
+  background: #ffe5e5;
+  border-left: 4px solid var(--danger);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  animation: slideIn 0.3s ease;
+}
+
+.success {
+  color: var(--success);
+  background: #e5ffe5;
+  border-left: 4px solid var(--success);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  animation: slideIn 0.3s ease;
+}
+
+/* Footer */
+.footer {
+  background: #f8f9fa;
+  padding: 20px 30px;
+  text-align: center;
+  color: var(--text-light);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  body {
+    padding: 10px;
+  }
+  
+  .content {
+    padding: 20px;
+  }
+  
+  .header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .note {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .note-buttons {
+    margin-left: 0;
+    margin-top: 12px;
+    justify-content: flex-end;
+  }
+  
+  .form-group {
+    flex-direction: column;
+  }
+  
+  .toggle-button {
+    padding: 10px 20px;
+  }
+}
+
+/* Contador de notas */
+.notes-counter {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  border-radius: 20px;
+  padding: 2px 10px;
+  font-size: 0.8rem;
+  margin-left: 10px;
+}
+
+/* Animación para botones */
+button:active {
+  transform: scale(0.95);
 }
