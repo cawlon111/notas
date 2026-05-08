@@ -2,11 +2,10 @@ require('dotenv').config()
 
 const PORT = process.env.PORT
 const MONGODB_URI = process.env.MONGODB_URI
+const SECRET = process.env.SECRET
 
-// ✅ Exportar con nombre
-const config = {
+module.exports = {
   MONGODB_URI,
-  PORT
+  PORT,
+  SECRET
 }
-
-module.exports = config

@@ -3,13 +3,15 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const notesRouter = require('./controllers/notes')
+const usersRouter = require('./controllers/users')    // 👈 Agrega
+const loginRouter = require('./controllers/login')    // 👈 Agrega
 const middleware = require('./utils/middleware')
-const logger = require('./utils/logger')  // ✅ No desestructurar
+const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 
 mongoose.set('strictQuery', false)
 
-logger.info('connecting to', config.MONGODB_URI)  // ✅ Usar notación de punto
+logger.info('connecting to', config.MONGODB_URI)
 
 mongoose.connect(config.MONGODB_URI)
   .then(() => {
@@ -25,6 +27,8 @@ app.use(express.json())
 app.use(middleware.requestLogger)
 
 app.use('/api/notes', notesRouter)
+app.use('/api/users', usersRouter)      // 👈 Agrega
+app.use('/api/login', loginRouter)      // 👈 Agrega
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
