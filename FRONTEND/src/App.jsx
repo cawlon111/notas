@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import Note from './components/Note'
 import noteService from './services/notes'
+import loginService from './services/login'
 import Notification from './components/Notification'
-// No importes App.css
+import LoginForm from './components/LoginForm'
+import storage from './utils/storage'
 
 const Footer = () => {
   return (
@@ -18,14 +20,49 @@ const App = () => {
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
+    // Cargar usuario guardado en localStorage al iniciar la app
+    const loggedUser = storage.getUser()
+    if (loggedUser) {
+      setUser(loggedUser)
+      noteService.setToken(loggedUser.token)
+    }
+    
+    // Cargar notas
     noteService
       .getAll()
       .then(initialNotes => {
         setNotes(initialNotes)
       })
+      .catch(() => {
+        setErrorMessage('Error al cargar las notas')
+        setTimeout(() => setErrorMessage(null), 5000)
+      })
   }, [])
+
+  const handleLogin = async ({ username, password }) => {
+    try {
+      const loggedUser = await loginService.login({ username, password })
+      setUser(loggedUser)
+      noteService.setToken(loggedUser.token)
+      storage.saveUser(loggedUser)
+      setSuccessMessage(`Bienvenido ${loggedUser.username}`)
+      setTimeout(() => setSuccessMessage(null), 3000)
+    } catch (error) {
+      setErrorMessage('Usuario o contraseña incorrectos')
+      setTimeout(() => setErrorMessage(null), 5000)
+    }
+  }
+
+  const handleLogout = () => {
+    setUser(null)
+    noteService.setToken(null)
+    storage.removeUser()
+    setSuccessMessage('Sesión cerrada correctamente')
+    setTimeout(() => setSuccessMessage(null), 3000)
+  }
 
   const toggleImportanceOf = (id) => {
     const note = notes.find(n => n.id === id)
@@ -99,11 +136,42 @@ const App = () => {
 
   const notesToShow = showAll ? notes : notes.filter(note => note.important)
 
+  // Si no hay usuario logueado, mostrar formulario de login
+  if (!user) {
+    return (
+      <div className="app-container">
+        <div className="header">
+          <h1>📝 Notas</h1>
+          <p>Inicia sesión para continuar</p>
+        </div>
+        <div className="content">
+          {errorMessage && <Notification message={errorMessage} type="error" />}
+          {successMessage && <Notification message={successMessage} type="success" />}
+          <LoginForm handleLogin={handleLogin} />
+        </div>
+        <Footer />
+      </div>
+    )
+  }
+
   return (
     <div className="app-container">
       <div className="header">
         <h1>📝 Notas</h1>
         <p>Organiza tus ideas de manera fácil y rápida</p>
+        
+        {/* Barra de usuario con avatar y botón de cerrar sesión */}
+        <div className="user-bar">
+          <div className="user-info">
+            <div className="user-avatar">
+              {user.username.charAt(0).toUpperCase()}
+            </div>
+            <span className="user-name">{user.username}</span>
+          </div>
+          <button onClick={handleLogout} className="logout-button">
+            Cerrar sesión
+          </button>
+        </div>
       </div>
       
       <div className="content">

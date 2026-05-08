@@ -2,17 +2,21 @@
 :root {
   --primary: #4a90e2;
   --primary-dark: #357abd;
+  --primary-light: #6ba5e8;
   --danger: #ff4444;
   --danger-dark: #cc0000;
   --success: #00c851;
   --success-dark: #007e33;
+  --warning: #ffbb33;
   --text: #333333;
   --text-light: #666666;
+  --text-white: #ffffff;
   --background: #f5f5f5;
   --card-bg: #ffffff;
   --border: #e0e0e0;
   --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --transition: all 0.3s ease;
 }
 
 * {
@@ -55,13 +59,13 @@ body {
 /* Header */
 .header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  color: var(--text-white);
   padding: 30px;
   text-align: center;
 }
 
 .header h1 {
-  color: white;
+  color: var(--text-white);
   font-size: 2.5rem;
   margin: 0;
   font-weight: 700;
@@ -74,12 +78,71 @@ body {
   font-size: 1rem;
 }
 
+/* Barra de usuario - MEJORADA */
+.user-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 50px;
+  padding: 8px 16px;
+  margin-top: 20px;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 6px 14px;
+  border-radius: 30px;
+}
+
+.user-avatar {
+  background: var(--success);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.user-name {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.logout-button {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-white);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.logout-button:hover {
+  background: var(--danger);
+  border-color: var(--danger);
+  transform: translateY(-2px);
+}
+
 /* Contenido principal */
 .content {
   padding: 30px;
 }
 
-/* Título principal (si se usa fuera del header) */
+/* Título principal */
 h1 {
   color: var(--primary);
   font-size: 2rem;
@@ -87,17 +150,29 @@ h1 {
   font-weight: 600;
 }
 
+h2 {
+  color: var(--text);
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+h3 {
+  color: var(--text);
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
 /* Botón de mostrar todas/importantes */
 .toggle-button {
   background: var(--primary);
-  color: white;
+  color: var(--text-white);
   border: none;
   padding: 12px 24px;
   border-radius: 25px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   margin-bottom: 20px;
   width: 100%;
 }
@@ -124,7 +199,7 @@ ul {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: all 0.3s ease;
+  transition: var(--transition);
   animation: slideIn 0.3s ease;
 }
 
@@ -166,7 +241,7 @@ ul {
   margin-left: 15px;
 }
 
-/* Botones de acción */
+/* Botones generales */
 button {
   cursor: pointer;
   padding: 8px 16px;
@@ -174,7 +249,7 @@ button {
   font-size: 0.85rem;
   font-weight: 500;
   border: none;
-  transition: all 0.3s ease;
+  transition: var(--transition);
 }
 
 .note-buttons button {
@@ -189,7 +264,7 @@ button {
 /* Botón de importancia */
 .importance-button {
   background: var(--primary) !important;
-  color: white !important;
+  color: var(--text-white) !important;
 }
 
 .importance-button:hover {
@@ -199,24 +274,18 @@ button {
 /* Botón de eliminar */
 .delete-button {
   background: var(--danger) !important;
-  color: white !important;
+  color: var(--text-white) !important;
 }
 
 .delete-button:hover {
   background: var(--danger-dark) !important;
 }
 
-/* Formulario */
+/* Formulario de notas */
 .note-form {
   margin-top: 20px;
   padding-top: 20px;
   border-top: 2px solid var(--border);
-}
-
-.note-form h3 {
-  margin-bottom: 15px;
-  color: var(--text);
-  font-size: 1.2rem;
 }
 
 .form-group {
@@ -231,7 +300,7 @@ button {
   border: 2px solid var(--border);
   border-radius: 10px;
   font-size: 1rem;
-  transition: all 0.3s ease;
+  transition: var(--transition);
 }
 
 .form-group input:focus {
@@ -242,7 +311,7 @@ button {
 
 .form-group button {
   background: var(--success);
-  color: white;
+  color: var(--text-white);
   padding: 12px 24px;
   font-weight: 600;
 }
@@ -252,25 +321,119 @@ button {
   transform: translateY(-2px);
 }
 
-/* Notificaciones */
-.error {
-  color: var(--danger);
+/* ============================================ */
+/* FORMULARIO DE LOGIN - NUEVO Y MEJORADO       */
+/* ============================================ */
+.login-form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.login-form h2 {
+  text-align: center;
+  color: var(--primary);
+  margin-bottom: 25px;
+}
+
+.login-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-form form div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.login-form label {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.login-form input {
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.login-form button[type="submit"] {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: var(--text-white);
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.login-form button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+/* ============================================ */
+/* NOTIFICACIONES - MEJORADAS                   */
+/* ============================================ */
+.notification {
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  animation: slideIn 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.notification-error {
   background: #ffe5e5;
   border-left: 4px solid var(--danger);
+  color: var(--danger);
+}
+
+.notification-success {
+  background: #e5ffe5;
+  border-left: 4px solid var(--success);
+  color: var(--success);
+}
+
+.notification-icon {
+  font-size: 1.2rem;
+}
+
+.notification-message {
+  flex: 1;
+}
+
+/* Clases para compatibilidad con el componente Notification existente */
+.error, .success {
   padding: 12px 16px;
   border-radius: 8px;
   margin-bottom: 20px;
   animation: slideIn 0.3s ease;
 }
 
+.error {
+  color: var(--danger);
+  background: #ffe5e5;
+  border-left: 4px solid var(--danger);
+}
+
 .success {
   color: var(--success);
   background: #e5ffe5;
   border-left: 4px solid var(--success);
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  animation: slideIn 0.3s ease;
 }
 
 /* Footer */
@@ -283,7 +446,9 @@ button {
   border-top: 1px solid var(--border);
 }
 
-/* Responsive */
+/* ============================================ */
+/* RESPONSIVE - MEJORADO                        */
+/* ============================================ */
 @media (max-width: 640px) {
   body {
     padding: 10px;
@@ -295,6 +460,24 @@ button {
   
   .header h1 {
     font-size: 1.8rem;
+  }
+  
+  .header {
+    padding: 20px;
+  }
+  
+  .user-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  
+  .user-info {
+    justify-content: center;
+  }
+  
+  .logout-button {
+    text-align: center;
   }
   
   .note {
@@ -315,13 +498,21 @@ button {
   .toggle-button {
     padding: 10px 20px;
   }
+  
+  .login-form {
+    padding: 10px;
+  }
 }
+
+/* ============================================ */
+/* EXTRAS - MEJORAS VISUALES                    */
+/* ============================================ */
 
 /* Contador de notas */
 .notes-counter {
   display: inline-block;
   background: var(--primary);
-  color: white;
+  color: var(--text-white);
   border-radius: 20px;
   padding: 2px 10px;
   font-size: 0.8rem;
@@ -331,4 +522,46 @@ button {
 /* Animación para botones */
 button:active {
   transform: scale(0.95);
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--border);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+
+/* Selección de texto */
+::selection {
+  background: var(--primary);
+  color: var(--text-white);
+}
+
+/* Loading spinner (opcional) */
+.loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
