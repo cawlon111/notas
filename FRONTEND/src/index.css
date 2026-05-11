@@ -384,6 +384,29 @@ button {
 }
 
 /* ============================================ */
+/* BOTÓN CANCELAR - NUEVO                       */
+/* ============================================ */
+.cancel-button {
+  background: var(--danger);
+  color: var(--text-white);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 10px;
+  width: 100%;
+}
+
+.cancel-button:hover {
+  background: var(--danger-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+/* ============================================ */
 /* NOTIFICACIONES - MEJORADAS                   */
 /* ============================================ */
 .notification {
@@ -501,6 +524,10 @@ button {
   
   .login-form {
     padding: 10px;
+  }
+  
+  .cancel-button {
+    padding: 10px 20px;
   }
 }
 

@@ -1,5 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Note from './components/Note'
+import NoteForm from './components/NoteForm'
+import Togglable from './components/Togglable'
 import noteService from './services/notes'
 import loginService from './services/login'
 import Notification from './components/Notification'
@@ -16,11 +18,15 @@ const Footer = () => {
 
 const App = () => {
   const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
   const [user, setUser] = useState(null)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [loginVisible, setLoginVisible] = useState(false)
+
+  const noteFormRef = useRef()
 
   useEffect(() => {
     // Cargar usuario guardado en localStorage al iniciar la app
@@ -42,12 +48,17 @@ const App = () => {
       })
   }, [])
 
-  const handleLogin = async ({ username, password }) => {
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    
     try {
       const loggedUser = await loginService.login({ username, password })
       setUser(loggedUser)
       noteService.setToken(loggedUser.token)
       storage.saveUser(loggedUser)
+      setLoginVisible(false)
+      setUsername('')
+      setPassword('')
       setSuccessMessage(`Bienvenido ${loggedUser.username}`)
       setTimeout(() => setSuccessMessage(null), 3000)
     } catch (error) {
@@ -103,40 +114,26 @@ const App = () => {
       })
   }
 
-  const addNote = (event) => {
-    event.preventDefault()
-    if (!newNote.trim()) {
-      setErrorMessage('La nota no puede estar vacía')
-      setTimeout(() => setErrorMessage(null), 3000)
-      return
-    }
-
-    const noteObject = {
-      content: newNote,
-      important: Math.random() < 0.5
-    }
-
+  // Crear nueva nota - recibe el objeto nota desde NoteForm
+  const addNote = (noteObject) => {
+    noteFormRef.current.toggleVisibility()  // Oculta el formulario después de crear la nota
+    
     noteService
       .create(noteObject)
       .then(returnedNote => {
         setNotes(notes.concat(returnedNote))
-        setNewNote('')
-        setSuccessMessage(`Nota "${newNote}" agregada correctamente`)
+        setSuccessMessage(`Nota "${noteObject.content}" agregada correctamente`)
         setTimeout(() => setSuccessMessage(null), 3000)
       })
       .catch(() => {
-        setErrorMessage(`Error al agregar la nota "${newNote}"`)
+        setErrorMessage(`Error al agregar la nota`)
         setTimeout(() => setErrorMessage(null), 5000)
       })
   }
 
-  const handleNoteChange = (event) => {
-    setNewNote(event.target.value)
-  }
-
   const notesToShow = showAll ? notes : notes.filter(note => note.important)
 
-  // Si no hay usuario logueado, mostrar formulario de login
+  // Si no hay usuario logueado, mostrar formulario de login con botón mostrar/ocultar
   if (!user) {
     return (
       <div className="app-container">
@@ -147,7 +144,27 @@ const App = () => {
         <div className="content">
           {errorMessage && <Notification message={errorMessage} type="error" />}
           {successMessage && <Notification message={successMessage} type="success" />}
-          <LoginForm handleLogin={handleLogin} />
+          
+          {!loginVisible && (
+            <button onClick={() => setLoginVisible(true)} className="toggle-button">
+              Iniciar sesión
+            </button>
+          )}
+          
+          {loginVisible && (
+            <div>
+              <LoginForm 
+                handleSubmit={handleLogin}
+                handleUsernameChange={({ target }) => setUsername(target.value)}
+                handlePasswordChange={({ target }) => setPassword(target.value)}
+                username={username}
+                password={password}
+              />
+              <button onClick={() => setLoginVisible(false)} className="cancel-button">
+                Cancelar
+              </button>
+            </div>
+          )}
         </div>
         <Footer />
       </div>
@@ -193,17 +210,10 @@ const App = () => {
           ))}
         </ul>
 
-        <form className="note-form" onSubmit={addNote}>
-          <h3>✏️ Agregar nueva nota</h3>
-          <div className="form-group">
-            <input
-              value={newNote}
-              onChange={handleNoteChange}
-              placeholder="Escribe tu nota aquí..."
-            />
-            <button type="submit">Guardar</button>
-          </div>
-        </form>
+        {/* Componente Togglable que muestra/oculta el formulario de notas */}
+        <Togglable buttonLabel="➕ Nueva nota" ref={noteFormRef}>
+          <NoteForm createNote={addNote} />
+        </Togglable>
       </div>
       
       <Footer />
