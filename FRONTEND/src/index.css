@@ -592,3 +592,27 @@ button:active {
     transform: rotate(360deg);
   }
 }
+/* Botones de filtro */
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+  justify-content: center;
+}
+
+.filter-button {
+  background: var(--primary-light);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.filter-button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}

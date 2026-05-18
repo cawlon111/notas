@@ -1,5 +1,7 @@
+cat > src/App.jsx << 'EOF'
 import NoteForm from './components/NoteForm';
 import Notes from './components/Notes';
+import VisibilityFilter from './components/VisibilityFilter';
 
 const App = () => {
   return (
@@ -11,6 +13,7 @@ const App = () => {
       
       <div className="content">
         <NoteForm />
+        <VisibilityFilter />
         <Notes />
       </div>
     </div>
@@ -18,3 +21,4 @@ const App = () => {
 };
 
 export default App;
+EOF

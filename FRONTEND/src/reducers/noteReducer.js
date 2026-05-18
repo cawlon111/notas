@@ -1,3 +1,17 @@
+// Estado inicial con notas de ejemplo en español
+const initialState = [
+  {
+    content: 'El reducer define cómo funciona el store de Redux',
+    important: true,
+    id: 1,
+  },
+  {
+    content: 'El estado del store puede contener cualquier tipo de datos',
+    important: false,
+    id: 2,
+  },
+];
+
 // Action creators
 export const createNote = (content) => {
   return {
@@ -18,7 +32,7 @@ export const toggleImportanceOf = (id) => {
 };
 
 // Reducer
-const noteReducer = (state = [], action) => {
+const noteReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'NEW_NOTE':
       return [...state, action.payload];
