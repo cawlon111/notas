@@ -1,39 +1,31 @@
-import { useState } from 'react'
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { createNote } from '../reducers/noteReducer';
 
-const NoteForm = ({ createNote }) => {
-  const [newNote, setNewNote] = useState('')
-
-  const handleChange = (event) => {
-    setNewNote(event.target.value)
-  }
+const NoteForm = () => {
+  const dispatch = useDispatch();
+  const [newNoteContent, setNewNoteContent] = useState('');
 
   const addNote = (event) => {
-    event.preventDefault()
-    if (!newNote.trim()) return
+    event.preventDefault();
+    if (!newNoteContent.trim()) return;
     
-    createNote({
-      content: newNote,
-      important: true
-    })
-    
-    setNewNote('')
-  }
+    dispatch(createNote(newNoteContent));
+    setNewNoteContent('');
+  };
 
   return (
-    <div className="formDiv">
-      <h3>✏️ Agregar nueva nota</h3>
-      <form onSubmit={addNote}>
-        <div className="form-group">
-          <input
-            value={newNote}
-            onChange={handleChange}
-            placeholder="Escribe tu nota aquí..."
-          />
-          <button type="submit">Guardar</button>
-        </div>
-      </form>
-    </div>
-  )
-}
+    <form onSubmit={addNote} className="note-form">
+      <div className="form-group">
+        <input
+          value={newNoteContent}
+          onChange={(e) => setNewNoteContent(e.target.value)}
+          placeholder="Escribe tu nota aquí..."
+        />
+        <button type="submit">Guardar</button>
+      </div>
+    </form>
+  );
+};
 
-export default NoteForm
+export default NoteForm;
