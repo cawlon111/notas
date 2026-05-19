@@ -1,22 +1,25 @@
-/* Variables globales */
+/* Variables globales - Modo oscuro/claro */
 :root {
-  --primary: #4a90e2;
-  --primary-dark: #357abd;
-  --primary-light: #6ba5e8;
-  --danger: #ff4444;
-  --danger-dark: #cc0000;
-  --success: #00c851;
-  --success-dark: #007e33;
-  --warning: #ffbb33;
-  --text: #333333;
-  --text-light: #666666;
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-light: #818cf8;
+  --primary-glow: rgba(99, 102, 241, 0.3);
+  --danger: #ef4444;
+  --danger-dark: #dc2626;
+  --success: #10b981;
+  --success-dark: #059669;
+  --warning: #f59e0b;
+  --text: #1f2937;
+  --text-light: #6b7280;
   --text-white: #ffffff;
-  --background: #f5f5f5;
+  --background: #f9fafb;
   --card-bg: #ffffff;
-  --border: #e0e0e0;
-  --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.15);
-  --transition: all 0.3s ease;
+  --border: #e5e7eb;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 * {
@@ -26,29 +29,32 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background-attachment: fixed;
   min-height: 100vh;
   padding: 20px;
 }
 
-/* Contenedor principal */
+/* Contenedor principal con efecto glass */
 .app-container {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
-  background: var(--card-bg);
-  border-radius: 20px;
-  box-shadow: var(--shadow-hover);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 32px;
+  box-shadow: var(--shadow-xl);
   overflow: hidden;
-  animation: fadeIn 0.5s ease-in;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-@keyframes fadeIn {
+@keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -56,40 +62,71 @@ body {
   }
 }
 
-/* Header */
+/* Header con gradiente animado */
 .header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: var(--text-white);
-  padding: 30px;
+  padding: 40px 30px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: shimmer 8s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translate(-30%, -30%) rotate(0deg); }
+  100% { transform: translate(30%, 30%) rotate(360deg); }
 }
 
 .header h1 {
   color: var(--text-white);
-  font-size: 2.5rem;
+  font-size: 3rem;
   margin: 0;
-  font-weight: 700;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #fff, rgba(255,255,255,0.8));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+  position: relative;
+  z-index: 1;
 }
 
 .header p {
-  margin-top: 10px;
-  opacity: 0.9;
-  font-size: 1rem;
+  margin-top: 12px;
+  opacity: 0.95;
+  font-size: 1.1rem;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
 }
 
-/* Barra de usuario - MEJORADA */
+/* Barra de usuario con efecto glass moderno */
 .user-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  border-radius: 50px;
-  padding: 8px 16px;
-  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  border-radius: 100px;
+  padding: 6px 6px 6px 16px;
+  margin-top: 24px;
   gap: 15px;
   flex-wrap: wrap;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  z-index: 1;
 }
 
 .user-info {
@@ -97,116 +134,145 @@ body {
   align-items: center;
   gap: 10px;
   font-size: 0.95rem;
-  background: rgba(255, 255, 255, 0.2);
-  padding: 6px 14px;
-  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 6px 16px 6px 8px;
+  border-radius: 100px;
 }
 
 .user-avatar {
-  background: var(--success);
-  width: 32px;
-  height: 32px;
+  background: linear-gradient(135deg, var(--success), var(--success-dark));
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .user-name {
   font-weight: 600;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 .logout-button {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.15);
   color: var(--text-white);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 8px 20px;
-  border-radius: 30px;
+  padding: 8px 24px;
+  border-radius: 100px;
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
   transition: var(--transition);
+  backdrop-filter: blur(10px);
 }
 
 .logout-button:hover {
   background: var(--danger);
   border-color: var(--danger);
-  transform: translateY(-2px);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
 /* Contenido principal */
 .content {
-  padding: 30px;
+  padding: 32px;
 }
 
-/* Título principal */
-h1 {
-  color: var(--primary);
-  font-size: 2rem;
-  margin-bottom: 20px;
-  font-weight: 600;
+/* Botones de filtro - diseño moderno */
+.filter-buttons {
+  display: flex;
+  gap: 12px;
+  margin: 24px 0;
+  justify-content: center;
 }
 
-h2 {
+.filter-button {
+  background: transparent;
   color: var(--text);
-  margin-bottom: 20px;
-  font-size: 1.5rem;
-}
-
-h3 {
-  color: var(--text);
-  margin-bottom: 15px;
-  font-size: 1.2rem;
-}
-
-/* Botón de mostrar todas/importantes */
-.toggle-button {
-  background: var(--primary);
-  color: var(--text-white);
-  border: none;
-  padding: 12px 24px;
-  border-radius: 25px;
-  font-size: 1rem;
+  border: 2px solid var(--border);
+  padding: 10px 24px;
+  border-radius: 100px;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
-  margin-bottom: 20px;
-  width: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
-.toggle-button:hover {
-  background: var(--primary-dark);
+.filter-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: var(--primary);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s, height 0.4s;
+  z-index: -1;
+}
+
+.filter-button:hover::before {
+  width: 120%;
+  height: 120%;
+}
+
+.filter-button:hover {
+  color: white;
+  border-color: var(--primary);
   transform: translateY(-2px);
-  box-shadow: var(--shadow);
 }
 
-/* Lista de notas */
+.filter-button:active {
+  transform: translateY(0);
+}
+
+/* Lista de notas con efectos modernos */
 ul {
   list-style: none;
-  margin-bottom: 30px;
+  margin-bottom: 32px;
 }
 
-/* Cada nota individual */
 .note {
   background: var(--card-bg);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 15px 20px;
+  border-radius: 20px;
+  padding: 18px 24px;
   margin-bottom: 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   transition: var(--transition);
-  animation: slideIn 0.3s ease;
+  animation: slideIn 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.note::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.05), transparent);
+  transition: left 0.5s;
+}
+
+.note:hover::before {
+  left: 100%;
 }
 
 @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateX(-20px);
+    transform: translateX(-30px);
   }
   to {
     opacity: 1;
@@ -215,263 +281,156 @@ ul {
 }
 
 .note:hover {
-  transform: translateX(5px);
-  box-shadow: var(--shadow);
-  border-color: var(--primary);
+  transform: translateX(5px) scale(1.01);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-light);
 }
 
-/* Contenido de la nota */
 .note-content {
   flex: 1;
   font-size: 1rem;
   color: var(--text);
   word-break: break-word;
-}
-
-/* Nota importante */
-.note-important .note-content {
-  font-weight: 600;
-  color: var(--primary);
-}
-
-/* Contenedor de botones de la nota */
-.note-buttons {
-  display: flex;
-  gap: 8px;
-  margin-left: 15px;
-}
-
-/* Botones generales */
-button {
-  cursor: pointer;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 0.85rem;
   font-weight: 500;
-  border: none;
-  transition: var(--transition);
+  cursor: pointer;
 }
 
-.note-buttons button {
-  background: #f0f0f0;
-  color: var(--text);
+.note-important {
+  background: linear-gradient(135deg, #fff, #fef3c7);
+  border-left: 4px solid var(--warning);
 }
 
-.note-buttons button:hover {
-  transform: scale(1.05);
+.note-important .note-content {
+  font-weight: 700;
+  color: var(--warning);
 }
 
-/* Botón de importancia */
-.importance-button {
-  background: var(--primary) !important;
-  color: var(--text-white) !important;
-}
-
-.importance-button:hover {
-  background: var(--primary-dark) !important;
-}
-
-/* Botón de eliminar */
-.delete-button {
-  background: var(--danger) !important;
-  color: var(--text-white) !important;
-}
-
-.delete-button:hover {
-  background: var(--danger-dark) !important;
-}
-
-/* Formulario de notas */
+/* Formulario de notas - diseño moderno */
 .note-form {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 2px solid var(--border);
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 2px dashed var(--border);
+}
+
+.note-form h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 20px;
 }
 
 .form-group {
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 12px;
 }
 
 .form-group input {
   flex: 1;
-  padding: 12px 16px;
+  padding: 14px 18px;
   border: 2px solid var(--border);
-  border-radius: 10px;
+  border-radius: 16px;
   font-size: 1rem;
   transition: var(--transition);
+  background: var(--card-bg);
 }
 
 .form-group input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+  box-shadow: 0 0 0 4px var(--primary-glow);
 }
 
 .form-group button {
-  background: var(--success);
-  color: var(--text-white);
-  padding: 12px 24px;
-  font-weight: 600;
+  background: linear-gradient(135deg, var(--success), var(--success-dark));
+  color: white;
+  padding: 14px 32px;
+  font-weight: 700;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  box-shadow: var(--shadow-sm);
 }
 
 .form-group button:hover {
-  background: var(--success-dark);
   transform: translateY(-2px);
+  box-shadow: var(--shadow);
 }
 
-/* ============================================ */
-/* FORMULARIO DE LOGIN - NUEVO Y MEJORADO       */
-/* ============================================ */
+/* Login form - diseño elegante */
 .login-form {
   max-width: 400px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 24px;
+  backdrop-filter: blur(10px);
 }
 
 .login-form h2 {
   text-align: center;
-  color: var(--primary);
-  margin-bottom: 25px;
-}
-
-.login-form form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.login-form form div {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.login-form label {
-  font-weight: 600;
-  color: var(--text);
-  font-size: 0.9rem;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 1.8rem;
+  font-weight: 700;
 }
 
 .login-form input {
-  padding: 12px 16px;
+  padding: 14px 16px;
   border: 2px solid var(--border);
-  border-radius: 10px;
-  font-size: 1rem;
+  border-radius: 14px;
   transition: var(--transition);
 }
 
 .login-form input:focus {
-  outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+  box-shadow: 0 0 0 4px var(--primary-glow);
 }
 
 .login-form button[type="submit"] {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: var(--text-white);
+  border-radius: 14px;
   padding: 14px;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 10px;
-  margin-top: 10px;
+  font-weight: 700;
 }
 
-.login-form button[type="submit"]:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
-}
-
-/* ============================================ */
-/* BOTÓN CANCELAR - NUEVO                       */
-/* ============================================ */
-.cancel-button {
-  background: var(--danger);
-  color: var(--text-white);
-  border: none;
-  padding: 12px 24px;
-  border-radius: 25px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  margin-top: 10px;
-  width: 100%;
-}
-
-.cancel-button:hover {
-  background: var(--danger-dark);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
-}
-
-/* ============================================ */
-/* NOTIFICACIONES - MEJORADAS                   */
-/* ============================================ */
-.notification {
-  padding: 12px 16px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  animation: slideIn 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.notification-error {
-  background: #ffe5e5;
-  border-left: 4px solid var(--danger);
-  color: var(--danger);
-}
-
-.notification-success {
-  background: #e5ffe5;
-  border-left: 4px solid var(--success);
-  color: var(--success);
-}
-
-.notification-icon {
-  font-size: 1.2rem;
-}
-
-.notification-message {
-  flex: 1;
-}
-
-/* Clases para compatibilidad con el componente Notification existente */
+/* Notificaciones con efecto moderno */
 .error, .success {
-  padding: 12px 16px;
-  border-radius: 8px;
+  padding: 14px 20px;
+  border-radius: 16px;
   margin-bottom: 20px;
   animation: slideIn 0.3s ease;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
 }
 
 .error {
-  color: var(--danger);
-  background: #ffe5e5;
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  color: var(--danger-dark);
   border-left: 4px solid var(--danger);
 }
 
 .success {
-  color: var(--success);
-  background: #e5ffe5;
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+  color: var(--success-dark);
   border-left: 4px solid var(--success);
 }
 
 /* Footer */
 .footer {
-  background: #f8f9fa;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
   padding: 20px 30px;
   text-align: center;
   color: var(--text-light);
   font-size: 0.85rem;
   border-top: 1px solid var(--border);
+  font-weight: 500;
 }
 
-/* ============================================ */
-/* RESPONSIVE - MEJORADO                        */
-/* ============================================ */
+/* Responsive mejorado */
 @media (max-width: 640px) {
   body {
     padding: 10px;
@@ -482,17 +441,18 @@ button {
   }
   
   .header h1 {
-    font-size: 1.8rem;
+    font-size: 2rem;
   }
   
   .header {
-    padding: 20px;
+    padding: 24px 20px;
   }
   
   .user-bar {
     flex-direction: column;
     align-items: stretch;
-    gap: 10px;
+    border-radius: 24px;
+    padding: 12px;
   }
   
   .user-info {
@@ -506,52 +466,28 @@ button {
   .note {
     flex-direction: column;
     align-items: stretch;
-  }
-  
-  .note-buttons {
-    margin-left: 0;
-    margin-top: 12px;
-    justify-content: flex-end;
+    border-radius: 16px;
   }
   
   .form-group {
     flex-direction: column;
   }
   
-  .toggle-button {
-    padding: 10px 20px;
+  .filter-buttons {
+    flex-wrap: wrap;
+  }
+  
+  .filter-button {
+    flex: 1;
+    text-align: center;
   }
   
   .login-form {
-    padding: 10px;
-  }
-  
-  .cancel-button {
-    padding: 10px 20px;
+    padding: 20px;
   }
 }
 
-/* ============================================ */
-/* EXTRAS - MEJORAS VISUALES                    */
-/* ============================================ */
-
-/* Contador de notas */
-.notes-counter {
-  display: inline-block;
-  background: var(--primary);
-  color: var(--text-white);
-  border-radius: 20px;
-  padding: 2px 10px;
-  font-size: 0.8rem;
-  margin-left: 10px;
-}
-
-/* Animación para botones */
-button:active {
-  transform: scale(0.95);
-}
-
-/* Scrollbar personalizada */
+/* Scrollbar moderna */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -562,7 +498,7 @@ button:active {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   border-radius: 10px;
 }
 
@@ -570,49 +506,73 @@ button:active {
   background: var(--primary-dark);
 }
 
-/* Selección de texto */
-::selection {
-  background: var(--primary);
-  color: var(--text-white);
+/* Animación de carga */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
-/* Loading spinner (opcional) */
 .loading {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--border);
-  border-top-color: var(--primary);
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+/* Estilo para el cursor de las notas */
+.note {
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+.note:hover {
+  transform: translateX(5px) scale(1.01);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-light);
+}
+
+/* Estilo para notas importantes */
+.note-important {
+  background: linear-gradient(135deg, #fff, #fef3c7);
+  border-left: 4px solid var(--warning);
+}
+
+.note-important .note-content {
+  font-weight: 700;
+  color: #b45309;
+}
+
+.important-star {
+  font-size: 1.2rem;
+  margin-left: 8px;
+  animation: starPop 0.3s ease;
+}
+
+@keyframes starPop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }
-/* Botones de filtro */
-.filter-buttons {
-  display: flex;
-  gap: 10px;
-  margin: 20px 0;
-  justify-content: center;
+
+/* Eliminar los botones de importancia antiguos si los hay */
+.importance-button {
+  display: none;
 }
 
-.filter-button {
-  background: var(--primary-light);
-  color: white;
-  border: none;
-  padding: 8px 20px;
-  border-radius: 25px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--transition);
+/* Asegurar que el login sea visible */
+.login-form {
+  position: relative;
+  z-index: 10;
+  background: white;
 }
 
-.filter-button:hover {
-  background: var(--primary-dark);
-  transform: translateY(-2px);
+.app-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Eliminar cualquier overlay */
+.overlay, .modal-backdrop {
+  display: none !important;
 }

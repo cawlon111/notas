@@ -1,0 +1,14 @@
+{
+  "notes": [
+    {
+      "content": "El reducer define cómo funciona el store de Redux",
+      "important": true,
+      "id": 1
+    },
+    {
+      "content": "El estado del store puede contener cualquier tipo de datos",
+      "important": false,
+      "id": 2
+    }
+  ]
+}

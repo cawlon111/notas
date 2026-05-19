@@ -6,9 +6,10 @@ const Note = ({ note, handleClick }) => {
     <li
       onClick={handleClick}
       className={`note ${note.important ? 'note-important' : ''}`}
+      style={{ cursor: 'pointer' }}
     >
       <span className="note-content">{note.content}</span>
-      {note.important && <strong> ⭐</strong>}
+      {note.important && <span className="important-star"> ⭐</span>}
     </li>
   );
 };
